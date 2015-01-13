@@ -1,0 +1,843 @@
+MARC21: kyrilliikka siirtyy tavallisista kentistä 880-kenttiin ja tavallisiin kenttiin luodaan latinitsa -- 27.10.2009 KK/AH, päivitetty 21.8.2013 KK/TV
+
+// TODO: Kenttä 300 -> 880?
+
+#define version 313
+
+
+#define macro Kenttanumero | { Mem(99);\
+                               If (KENTTA=880) Then {\
+                                 Sto(99, Val(S) + 1); Mem(99);\
+                                 If (S < 10) Then 'KENTTA-0' + S Else 'KENTTA-' + S;\
+                               }\
+                               else\
+                               {\
+                                 If (S < 10) Then 'KENTTA-0' + S + '/(N'\ Else 'KENTTA-' + S + '/(N';\
+                               }\
+                             }\
+
+#define macro Loppupiste | If (RegFind('[\\)\\.\\-]\$') < 0) S + '.'
+
+// Clear memory, do nothing else
+000 | 000 | '0'; Sto(99); If (0=1) Then S
+
+// Record label pos 1-5 (rec length) generated nothing to do
+000/6-17/   | 000/6-17/   | S
+000/18/     | 000/18/     | '4'
+000/19/     | 000/19/     | 'a'
+000/20-24/   | 000/20-24/   | S
+005         | 005         | S
+006         | 006         | S
+007         | 007         | S
+008/1-18/  | 008/1-18/     | S
+008/19-22/  | 008/19-22/   | S; Replace (' ' By '|')
+008/23-40/  | 008/23-40/   | S
+
+041I1       | 041I1       | S
+041I2       | 041I2       | ' '
+041         | 041         | S
+
+080I1       | 080I1       | ' '
+080I2       | 080I2       | ' '
+080$a       | 080$a       | S
+
+000         | 066I1       | ' '
+000         | 066I2       | ' '
+000         | 066$c       | '(N)Q'
+
+020I1       | 020I1       | ' '
+020I2       | 020I2       | S
+020$a       | 020$a       | If (RegFind('^([\\d\\-xX]+)') >= 0) Then RegMatch(1) Else S
+
+022I1       | 022I1       | S
+022I2       | 022I2       | S
+022         | 022$6       | With (KENTTA=880) Kenttanumero
+022$a       | 022$a       | Table ('kyril2latinma21.tbl')
+022$y       | 022$y       | Table ('kyril2latinma21.tbl')
+022$z       | 022$z       | Table ('kyril2latinma21.tbl')
+
+022I1       | <AC2I1        | S
+022I2       | <AC2I2        | ' '
+022         | <AC2$6        | With (KENTTA=022) Kenttanumero
+022         | <AC2          | + S
+AC2I1       | 880(new)I1    | S
+AC2I2       | 880(newest)I2 | S
+AC2         | 880(newest)   | S
+
+100I1       | <B00I1        | S
+100I2       | <B00I2        | ' '
+100         | <B00$6        | With (KENTTA=880) Kenttanumero
+100$a       | <B00$a        | Table ('kyril2latinma21.tbl')
+100$c       | <B00$c        | Table ('kyril2latinma21.tbl')
+100         | <B00          | S
+B00I1       | 100(new)I1    | S
+B00I2       | 100(newest)I2 | S
+B00         | 100(newest)   | S; Loppupiste
+
+100I1       | <BA0I1         | S
+100I2       | <BA0I2         | ' '
+100         | <BA0$6         | With (KENTTA=100) Kenttanumero
+100$a       | <BA0$a         | + S
+100$c       | <BA0$c         | + S
+100         | <BA0           | + If (RegFind('[\\)\\.\\-]\$') < 0) Then '.'
+BA0I1       | 880(new)I1     | S
+BA0I2       | 880(newest)I2  | S
+BA0         | 880(newest)    | S
+
+110I1       | <B10I1        | S
+110I2       | <B10I2        | ' '
+110         | <B10$6        | With (KENTTA=110) Kenttanumero
+110$a       | <B10$a        | Table ('kyril2latinma21.tbl')
+110$b       | <B10$b        | Table ('kyril2latinma21.tbl')
+110$n       | <B10$n        | Table ('kyril2latinma21.tbl')
+110$d       | <B10$d        | Table ('kyril2latinma21.tbl')
+110$c       | <B10$c        | Table ('kyril2latinma21.tbl')
+110$e       | <B10$e        | Table ('kyril2latinma21.tbl')
+B10I1       | 110(new)I1    | S
+B10I2       | 110(newest)I2 | S
+B10         | 110(newest)   | S; Loppupiste
+
+110I1       | <BB0I1         | S
+110I2       | <BB0I2         | ' '
+110         | <BB0$6         | With (KENTTA=110) Kenttanumero
+110         | <BB0           | + S
+110         | <BB0           | + If (RegFind('[\\)\\.\\-]\$') < 0) Then '.'
+BB0I1       | 880(new)I1     | S
+BB0I2       | 880(newest)I2  | S
+BB0         | 880(newest)    | S
+
+
+111I1       | <B11I1        | S
+111I2       | <B11I2        | ' '
+111         | <B11$6        | With (KENTTA=880) Kenttanumero
+111$a       | <B11$a        | Table ('kyril2latinma21.tbl')
+111$e       | <B11$e        | Table ('kyril2latinma21.tbl')
+111$n       | <B11$n        | Table ('kyril2latinma21.tbl')
+111$d       | <B11$d        | Table ('kyril2latinma21.tbl')
+111$c       | <B11$c        | Table ('kyril2latinma21.tbl')
+111$4       | <B11$4        | Table ('kyril2latinma21.tbl')
+B11I1       | 111(new)I1    | S
+B11I2       | 111(newest)I2 | S
+B11         | 111(newest)   | S; Loppupiste
+
+111I1       | <BB1I1         | S
+111I2       | <BB1I2         | ' '
+111         | <BB1$6         | With (KENTTA=111) Kenttanumero
+111         | <BB1           | + S; Loppupiste
+BB1I1       | 880(new)I1     | S
+BB1I2       | 880(newest)I2  | S
+BB1         | 880(newest)    | S
+
+130I1       | <B30I1        | S
+130I2       | <B30I2        | ' '
+130         | <B30$6        | With (KENTTA=880) Kenttanumero
+130$a       | <B30$a        | Table ('kyril2latinma21.tbl')
+130$b       | <B30$b        | Table ('kyril2latinma21.tbl')
+130$m       | <B30$m        | Table ('kyril2latinma21.tbl')
+130$e       | <B30$e        | Table ('kyril2latinma21.tbl')
+130$r       | <B30$r        | Table ('kyril2latinma21.tbl')
+130$g       | <B30$g        | Table ('kyril2latinma21.tbl')
+130$n       | <B30$n        | Table ('kyril2latinma21.tbl')
+130$p       | <B30$p        | Table ('kyril2latinma21.tbl')
+130$s       | <B30$s        | Table ('kyril2latinma21.tbl')
+130$o       | <B30$o        | Table ('kyril2latinma21.tbl')
+130$l       | <B30$l        | Table ('kyril2latinma21.tbl')
+B30I1       | 130(new)I1    | S
+B30I2       | 130(newest)I2 | S
+B30         | 130(newest)   | S; Loppupiste
+
+130I1   | <BD0I1         | S
+130I2   | <BD0I2         | ' '
+130     | <BD0$6         | With (KENTTA=130) Kenttanumero
+130     | <BD0           | + S
+130     | <BD0           | + If (RegFind('[\\)\\.\\-]\$') < 0) Then '.'
+BD0I1   | 880(new)I1     | S
+BD0I2   | 880(newest)I2  | S
+BD0     | 880(newest)    | S
+
+222I1   | 222I1   | S
+222I2   | 222I2   | S
+222     | 222$6   | With (KENTTA=880) Kenttanumero
+222$a   | 222$a   | Table ('kyril2latinma21.tbl')
+222$b   | 222$b   | Table ('kyril2latinma21.tbl')
+
+222I1   | <CC2I1        | S
+222I2   | <CC2I2        | S
+222     | <CC2$6        | With (KENTTA=222) Kenttanumero
+222     | <CC2          | + S
+CC2I1   | 880(new)I1    | S
+CC2I2   | 880(newest)I2 | S
+CC2     | 880(newest)   | S
+
+240I1   | 240I1   | S
+240I2   | 240I2   | S
+240     | 240$6   | With (KENTTA=880) Kenttanumero
+240$a   | 240$a   | Table ('kyril2latinma21.tbl')
+240$m   | 240$m   | Table ('kyril2latinma21.tbl')
+240$r   | 240$r   | Table ('kyril2latinma21.tbl')
+240$g   | 240$g   | Table ('kyril2latinma21.tbl')
+240$n   | 240$n   | Table ('kyril2latinma21.tbl')
+240$p   | 240$p   | Table ('kyril2latinma21.tbl')
+240$s   | 240$s   | Table ('kyril2latinma21.tbl')
+240$o   | 240$o   | Table ('kyril2latinma21.tbl')
+240$l   | 240$l   | Table ('kyril2latinma21.tbl')
+
+240I1   | <CE0I1         | S
+240I2   | <CE0I2         | S
+240$a   | <CE0$6         | '240-07/(N'
+240     | <CE0           | + S
+CE0I1   | 880(new)I1     | S
+CE0I2   | 880(newest)I2  | S
+CE0     | 880(newest)    | S
+
+245I1   | 245I1       | If (Exists(@100) Or Exists(@110) Or Exists(@111)) Then '1' Else S
+245I2   | 245I2       | S
+245     | <C45$6      | With (KENTTA=880) Kenttanumero
+245$a   | <C45$a      | Table ('kyril2latinma21.tbl')
+245$h   | <C45$h      | '[' + Table ('kyril2latinma21.tbl') +']'
+245$b   | <C45$b      | Table ('kyril2latinma21.tbl')
+245$c   | <C45$c      | Table ('kyril2latinma21.tbl')
+245$n   | <C45$n      | Table ('kyril2latinma21.tbl')
+245$p   | <C45$p      | Table ('kyril2latinma21.tbl')
+C45     | 245         | S; Replace('$b' By ' : $b'); Replace('::' By ':'); Replace('$c' By ' / $c'); Replace('//' By '/');
+                        Loppupiste
+
+245I1   | <CE5I1        | If (Exists(@100) Or Exists(@110) Or Exists(@111)) Then '1' Else S
+245I2   | <CE5I2        | S
+245     | <CE5$6        | With (KENTTA=245) Kenttanumero
+245$a   | <CE5$a        | S
+245$h   | <CE5$h        | '[' + S + ']'
+245$b   | <CE5$b        | S
+245$c   | <CE5$c        | S
+245$n   | <CE5$n        | S
+245$p   | <CE5$p        | S
+CE5I1   | 880(new)I1    | S
+CE5I2   | 880(newest)I2 | S
+CE5     | 880(newest)   | S; Replace('$b' By ' : $b'); Replace('::' By ':'); Replace('$c' By ' / $c'); Replace('//' By '/');
+                          Loppupiste
+
+246I1   | 246I1   | S
+246I2   | 246I2   | S
+246     | 246$6   | With (KENTTA=880) Kenttanumero
+246$a   | 246$a   | Table ('kyril2latinma21.tbl')
+246$h   | 246$h   | Table ('kyril2latinma21.tbl')
+246$b   | 246$b   | Table ('kyril2latinma21.tbl')
+246$n   | 246$n   | Table ('kyril2latinma21.tbl')
+246$p   | 246$p   | Table ('kyril2latinma21.tbl')
+
+246I1   | <CE6I1        | S
+246I2   | <CE6I2        | S
+246     | <CE6$6        | With (KENTTA=246) Kenttanumero
+246     | <CE6          | + S
+CE6I1   | 880(new)I1    | S
+CE6I2   | 880(newest)I2 | S
+CE6     | 880(newest)   | S
+
+250I1   | 250I1   | ' '
+250I2   | 250I2   | S
+250     | 250$6   | With (KENTTA=880) Kenttanumero
+250$a   | 250$a   | Table ('kyril2latinma21.tbl')
+250$b   | 250$b   | Table ('kyril2latinma21.tbl')
+
+250I1   | <CF0I1        | ' '
+250I2   | <CF0I2        | S
+250     | <CF0$6        | With (KENTTA=250) Kenttanumero
+250     | <CF0          | + S
+CF0I1   | 880(new)I1    | S
+CF0I2   | 880(newest)I2 | S
+CF0     | 880(newest)   | S
+
+260I1   | <C60I1        | ' '
+260I2   | <C60I2        | S
+260     | <C60$6        | With (KENTTA=880) Kenttanumero
+260$a   | <C60$a        | If (ns=1 Or ns=2) Then Table ('kyril2latinma21.tbl'); ReplaceOcc('M\2E' By 'Moskva','=1'); ReplaceOcc('L\2E' By 'Leningrad','=1')
+260$b   | <C60$b        | If (ns=1 Or ns=2) Then Table ('kyril2latinma21.tbl')
+260$c   | <C60$c        | Table ('kyril2latinma21.tbl')
+C60I1   | 260I1         | S
+C60I2   | 260I2         | S
+C60     | 260           | S; Replace('$b' By ' : $b'); Replace('::' By ':') ; Replace('$c' By ', $c'); Replace(',,' By ',');
+                          Loppupiste
+
+260I1   | <CG0I1        | ' '
+260I2   | <CG0I2        | S
+260     | <CG0$6        | With (KENTTA=260) Kenttanumero
+260$a   | <CG0$a        | If (ns=1 Or ns=2) Then S; Replace ('\D0\9C\2E' By '\D0\9C\D0\BE\D1\81\D0\BA\D0\B2\D0\B0'); Replace ('\D0\98\2E' By '\D0\98\D0\B5\D0\BD\D0\B8\D0\BD\D0\B3\D1\80\D0\B0\D0\B4')
+260$b   | <CG0$b        | If (ns=1 Or ns=2) Then S
+260$c   | <CG0$c        | S
+CG0I1   | 880(new)I1    | S
+CG0I2   | 880(newest)I2 | S
+CG0     | 880(newest)   | S; Replace('$b' By ' : $b'); Replace('::' By ':') ; Replace('$c' By ', $c'); Replace(',,' By ',');
+                          Loppupiste
+
+300I1   | 300I1   | ' '
+300I2   | 300I2   | S
+300$a   | 300$a   | Table ('kyril2latinma21.tbl')
+300$e   | 300$e   | Table ('kyril2latinma21.tbl')
+
+310I1   | 310I1   | ' '
+310I2   | 310I2   | S
+310     | 310$6   | With (KENTTA=880) Kenttanumero
+310$a   | 310$a   | Table ('kyril2latinma21.tbl')
+
+310I1   | <DB0I1        | ' '
+310I2   | <DB0I2        | S
+310     | <DB0$6        | With (KENTTA=310) Kenttanumero
+310     | <DB0          | + S
+DB0I1   | 880(new)I1    | S
+DB0I2   | 880(newest)I2 | S
+DB0     | 880(newest)   | S
+
+362I1   | 362I1   | S
+362I2   | 362I2   | ' '
+362     | 362$6   | With (KENTTA=880) Kenttanumero
+362$a   | 362$a   | Table ('kyril2latinma21.tbl'); If (RegFind('[\\)\\.\\-]\$') < 0) S + '.'
+
+362I1   | <DG2I1        | ' '
+362I2   | <DG2I2        | S
+362     | <DG2$6        | With (KENTTA=362) Kenttanumero
+362     | <DG2          | + S; Loppupiste
+DG2I1   | 880(new)I1    | S
+DG2I2   | 880(newest)I2 | S
+DG2     | 880(newest)   | S
+
+490I1   | <E90I1        | S
+490I2   | <E90I2        | S
+490     | <E90$6        | With (KENTTA=880) Kenttanumero
+490$a   | <E90$a        | Table ('kyril2latinma21.tbl')
+490$x   | <E90$x        | Table ('kyril2latinma21.tbl')
+490$v   | <E90$v        | Table ('kyril2latinma21.tbl')
+E90I1   | 490(new)I1    | S
+E90I2   | 490(newest)I2 | S
+E90     | 490(newest)   | S; Loppupiste
+
+#if (E90$a != @490$a)
+490I1   | <EJ0I1        | S
+490I2   | <EJ0I2        | S
+490     | <EJ0$6        | With (KENTTA=490) Kenttanumero
+490     | <EJ0          | + S
+EJ0I1   | 880(new)I1    | S
+EJ0I2   | 880(newest)I2 | S
+EJ0     | 880(newest)   | S; Loppupiste
+#endif
+
+// 490 -> 830
+490I1   | <I30I1        | ' '
+490I2   | <I30I2        | '0'
+490     | <I30$6        | With (KENTTA=880) Kenttanumero
+490$a   | <I30$a        | Table ('kyril2latinma21.tbl')
+490$x   | <I30$x        | Table ('kyril2latinma21.tbl')
+490$v   | <I30$v        | Table ('kyril2latinma21.tbl')
+I30I1   | 830(new)I1    | S
+I30I2   | 830(newest)I2 | S
+I30     | 830(newest)   | S; Loppupiste
+
+#if (I30$a != @490$a)
+490I1   | <IJ0I1        | ' '
+490I2   | <IJ0I2        | '0'
+490     | <IJ0$6        | With (KENTTA=830) Kenttanumero
+490     | <IJ0          | + S; Loppupiste
+IJ0I1   | 880(new)I1    | S
+IJ0I2   | 880(newest)I2 | S
+IJ0     | 880(newest)   | S
+#endif
+
+500I1   | 500I1   | ' '
+500I2   | 500I2   | S
+500     | 500$6   | With (KENTTA=880) Kenttanumero
+500$a   | 500$a   | Table ('kyril2latinma21.tbl'); Loppupiste
+
+500I1   | <FA0I1        | ' '
+500I2   | <FA0I2        | S
+500     | <FA0$6        | With (KENTTA=500) Kenttanumero
+500     | <FA0          | + S
+FA0I1   | 880(new)I1    | S
+FA0I2   | 880(newest)I2 | S
+FA0     | 880(newest)   | S; Loppupiste
+
+502I1   | <F02I1        | ' '
+502I2   | <F02I2        | S
+502     | <F02$6        | With (KENTTA=880) Kenttanumero
+502$a   | <F02$a        | Table ('kyril2latinma21.tbl')
+502$b   | <F02$b        | Table ('kyril2latinma21.tbl')
+502$c   | <F02$c        | Table ('kyril2latinma21.tbl')
+502$d   | <F02$d        | Table ('kyril2latinma21.tbl')
+F02I1   | 502(new)I1    | S
+F02I2   | 502(newest)I2 | S
+F02     | 502(newest)   | S; Loppupiste
+
+502I1   | <FA2I1        | ' '
+502I2   | <FA2I2        | S
+502     | <FA2$6        | With (KENTTA=502) Kenttanumero
+502     | <FA2          | + S
+FA2I1   | 880(new)I1    | S
+FA2I2   | 880(newest)I2 | S
+FA2     | 880(newest)   | S; Loppupiste
+
+505I1   | <F05I1        | S
+505I2   | <F05I2        | S
+505     | <F05$6        | With (KENTTA=880) Kenttanumero
+505$a   | <F05$a        | Table ('kyril2latinma21.tbl')
+505$u   | <F05$u        | Table ('kyril2latinma21.tbl')
+F05I1   | 505(new)I1    | S
+F05I2   | 505(newest)I2 | S
+F05     | 505(newest)   | S; Loppupiste
+
+505I1   | <FA5I1          | S
+505I2   | <FA5I2          | S
+505     | <FA5$6          | With (KENTTA=505) Kenttanumero
+505     | <FA5            | + S
+FA5I1   | 880(new)I1      | S
+FA5I2   | 880(newest)I2   | S
+FA5     | 880(newest)     | S; Loppupiste
+
+510I1   | 510I1   | ' '
+510I2   | 510I2   | S
+510     | 510$6   | With (KENTTA=880) Kenttanumero
+510$a   | 510$a   | Table ('kyril2latinma21.tbl')
+510$b   | 510$b   | Table ('kyril2latinma21.tbl')
+510$c   | 510$c   | Table ('kyril2latinma21.tbl')
+
+510I1   | <FB0I1          | ' '
+510I2   | <FB0I2          | S
+510     | <FB0$6          | With (KENTTA=510) Kenttanumero
+510     | <FB0            | + S
+FB0I1   | 880(new)I1      | S
+FB0I2   | 880(newest)I2   | S
+FB0     | 880(newest)     | S
+
+515I1   | <F15I1        | ' '
+515I2   | <F15I2        | S
+515     | <F15$6        | With (KENTTA=880) Kenttanumero
+515$a   | <F15$a        | Table ('kyril2latinma21.tbl')
+F15I1   | 515(new)I1    | S
+F15I2   | 515(newest)I2 | S
+F15     | 515(newest)   | S; Loppupiste
+
+515I1   | <FB5I1          | ' '
+515I2   | <FB5I2          | ' '
+515     | <FB5$6          | With (KENTTA=515) Kenttanumero
+515     | <FB5            | + S
+FB5I1   | 880(new)I1      | S
+FB5I2   | 880(newest)I2   | S
+FB5     | 880(newest)     | S; Loppupiste
+
+530I1   | <F30I1        | ' '
+530I2   | <F30I2        | ' '
+530     | <F30$6        | With (KENTTA=880) Kenttanumero
+530$a   | <F30$a        | Table ('kyril2latinma21.tbl')
+530$u   | <F30$u        | Table ('kyril2latinma21.tbl')
+F30I1   | 530(new)I1    | S
+F30I2   | 530(newest)I2 | S
+F30     | 530(newest)   | S
+
+530I1   | <FD0I1          | ' '
+530I2   | <FD0I2          | S
+530     | <FD0$6          | With (KENTTA=530) Kenttanumero
+530     | <FD0            | + S
+FD0I1   | 880(new)I1      | S
+FD0I2   | 880(newest)I2   | S
+FD0     | 880(newest)     | S; Loppupiste
+
+534I1   | 240(new)I2      | '0'
+534I2   | 240(newest)I1   | '1'
+534$t   | 240(newest)$a   | S
+
+538I1   | <F38I1        | ' '
+538I2   | <F38I2        | ' '
+538     | <F38$6        | With (KENTTA=880) Kenttanumero
+538$a   | <F38$a        | Table ('kyril2latinma21.tbl')
+F38I1   | 538(new)I1    | S
+F38I2   | 538(newest)I2 | S
+F38     | 538(newest)   | S; Loppupiste
+
+538I1   | <FD8I1          | ' '
+538I2   | <FD8I2          | ' '
+538     | <FD8$6          | '538-37/(N'
+538     | <FD8            | + S; Loppupiste
+FD8I1   | 880(new)I1      | S
+FD8I2   | 880(newest)I2   | S
+FD8     | 880(newest)     | S
+
+546I1   | <F46I1        | ' '
+546I2   | <F46I2        | ' '
+546     | <F46$6        | With (KENTTA=880) Kenttanumero
+546$a   | <F46$a        | Table ('kyril2latinma21.tbl')
+F46I1   | 546(new)I1    | S
+F46I2   | 546(newest)I2 | S
+F46     | 546(newest)   | S; Loppupiste
+
+#if (F46$a != @546$a)	// Tarkistetaan onko lähdetietueen kenttä kyrilliikkaa.
+
+546I1   | <FG6I1          | ' '
+546I2   | <FG6I2          | ' '
+546     | <FG6$6          | With (KENTTA=546) Kenttanumero
+546     | <FG6            | + S; Loppupiste
+FG6I1   | 880(new)I1      | S
+FG6I2   | 880(newest)I2   | S
+FG6     | 880(newest)     | S
+
+#endif
+
+600I1   | <G00I1   | S
+600I2   | <G00I2   | S
+600     | <G00$6   | With (KENTTA=880) Kenttanumero
+600$a   | <G00$a   | Table ('kyril2latinma21.tbl')
+600$c   | <G00$c   | Table ('kyril2latinma21.tbl')
+600$t   | <G00$t   | Table ('kyril2latinma21.tbl')
+600$x   | <G00$x   | Table ('kyril2latinma21.tbl')
+600$z   | <G00$z   | Table ('kyril2latinma21.tbl')
+600$y   | <G00$y   | Table ('kyril2latinma21.tbl')
+G00I1   | 600I1    | S
+G00I2   | 600I2    | S
+G00     | 600      | S; Loppupiste
+
+600I1   | <GA0I1        | S
+600I2   | <GA0I2        | S
+600     | <GA0$6        | With (KENTTA=600) Kenttanumero
+600$a   | <GA0$a        | S
+600$c   | <GA0$c        | S
+600$t   | <GA0$t        | S
+600$x   | <GA0$x        | S
+600$z   | <GA0$z        | S
+600$y   | <GA0$y        | S
+GA0I1   | 880(new)I1    | S
+GA0I2   | 880(newest)I2 | S
+GA0     | 880(newest)   | S; Loppupiste
+
+610I1   | <G10I1        | S
+610I2   | <G10I2        | S
+610     | <G10$6        | With (KENTTA=880) Kenttanumero
+610$a   | <G10$a        | Table ('kyril2latinma21.tbl')
+610$b   | <G10$b        | Table ('kyril2latinma21.tbl')
+610$n   | <G10$n        | Table ('kyril2latinma21.tbl')
+610$d   | <G10$d        | Table ('kyril2latinma21.tbl')
+610$c   | <G10$c        | Table ('kyril2latinma21.tbl')
+610$g   | <G10$g        | Table ('kyril2latinma21.tbl')
+610$t   | <G10$t        | Table ('kyril2latinma21.tbl')
+610$x   | <G10$x        | Table ('kyril2latinma21.tbl')
+610$z   | <G10$z        | Table ('kyril2latinma21.tbl')
+610$y   | <G10$y        | Table ('kyril2latinma21.tbl')
+G10I1   | 610(new)I1    | S
+G10I2   | 610(newest)I2 | S
+G10     | 610(newest)   | S; Loppupiste
+
+610I1   | <GB0I1           | S
+610I2   | <GB0I2           | S
+610     | <GB0$6           | With (KENTTA=610) Kenttanumero
+610     | <GB0             | + S
+GB0I1   | 880(new)I1       | S
+GB0I2   | 880(newest)I2    | S
+GB0     | 880(newest)      | S; Loppupiste
+
+630I1   | <G30I1        | S
+630I2   | <G30I2        | S
+630     | <G30$6        | With (KENTTA=880) Kenttanumero
+630$a   | <G30$a        | Table ('kyril2latinma21.tbl')
+630$m   | <G30$m        | Table ('kyril2latinma21.tbl')
+630$g   | <G30$g        | Table ('kyril2latinma21.tbl')
+630$n   | <G30$n        | Table ('kyril2latinma21.tbl')
+630$p   | <G30$p        | Table ('kyril2latinma21.tbl')
+630$s   | <G30$s        | Table ('kyril2latinma21.tbl')
+630$q   | <G30$q        | Table ('kyril2latinma21.tbl')
+630$o   | <G30$o        | Table ('kyril2latinma21.tbl')
+630$l   | <G30$l        | Table ('kyril2latinma21.tbl')
+630$x   | <G30$x        | Table ('kyril2latinma21.tbl')
+630$z   | <G30$z        | Table ('kyril2latinma21.tbl')
+630$y   | <G30$y        | Table ('kyril2latinma21.tbl')
+G30I1   | 630(new)I1    | S
+G30I2   | 630(newest)I2 | S
+G30     | 630(newest)   | S; Loppupiste
+
+630I1   | <GD0I1          | S
+630I2   | <GD0I2          | S
+630     | <GD0$6          | With (KENTTA=630) Kenttanumero
+630     | <GD0            | + S
+GD0I1   | 880(new)I1      | S
+GD0I2   | 880(newest)I2   | S
+GD0     | 880(newest)     | S; Loppupiste
+
+700I1   | <H00I1        | S
+700I2   | <H00I2        | S
+700     | <H00$6        | With (KENTTA=880) Kenttanumero
+700$a   | <H00$a        | Table ('kyril2latinma21.tbl'); Delete (',', At Ending)
+700$c   | <H00$c        | Table ('kyril2latinma21.tbl')
+700$t   | <H00$t        | Table ('kyril2latinma21.tbl')
+H00I1   | 700(new)I1    | S
+H00I2   | 700(newest)I2 | S
+H00     | 700(newest)   | S; Loppupiste
+
+700I1   | <HA0I1        | S
+700I2   | <HA0I2        | S
+700     | <HA0$6        | With (KENTTA=700) Kenttanumero
+700$a   | <HA0$a        | S; Delete (',', At Ending)
+700$c   | <HA0$c        | S
+700$t   | <HA0$t        | S
+HA0I1   | 880(new)I1    | S
+HA0I2   | 880(newest)I2 | S
+HA0     | 880(newest)   | S; Loppupiste
+
+710I1   | <H10I1        | S
+710I2   | <H10I2        | S
+710     | <H10$6        | With (KENTTA=880) Kenttanumero
+710$a   | <H10$a        | Table ('kyril2latinma21.tbl')
+710$b   | <H10$b        | Table ('kyril2latinma21.tbl')
+710$n   | <H10$n        | Table ('kyril2latinma21.tbl')
+710$d   | <H10$d        | Table ('kyril2latinma21.tbl')
+710$c   | <H10$c        | Table ('kyril2latinma21.tbl')
+710$g   | <H10$g        | Table ('kyril2latinma21.tbl')
+710$t   | <H10$t        | Table ('kyril2latinma21.tbl')
+H10I1   | 710(new)I1    | S
+H10I2   | 710(newest)I2 | S
+H10     | 710(newest)   | S; Loppupiste
+
+710I1   | <HB0I1        | S
+710I2   | <HB0I2        | S
+710     | <HB0$6        | With (KENTTA=710) Kenttanumero
+710$a   | <HB0$a        | S
+710$b   | <HB0$b        | S
+710$n   | <HB0$n        | S
+710$d   | <HB0$d        | S
+710$c   | <HB0$c        | S
+710$g   | <HB0$g        | S
+710$t   | <HB0$t        | S
+HB0I1   | 880(new)I1    | S
+HB0I2   | 880(newest)I2 | S
+HB0     | 880(newest)   | S; Loppupiste
+
+711I1   | <H11I1        | S
+711I2   | <H11I2        | S
+711     | <H11$6        | With (KENTTA=880) Kenttanumero
+711$a   | <H11$a        | Table ('kyril2latinma21.tbl')
+711$e   | <H11$e        | Table ('kyril2latinma21.tbl')
+711$n   | <H11$n        | Table ('kyril2latinma21.tbl')
+711$d   | <H11$d        | Table ('kyril2latinma21.tbl')
+711$c   | <H11$c        | Table ('kyril2latinma21.tbl')
+711$t   | <H11$t        | Table ('kyril2latinma21.tbl')
+H11I1   | 711(new)I1    | S
+H11I2   | 711(newest)I2 | S
+H11     | 711(newest)   | S; Loppupiste
+
+711I1   | <HB1I1        | S
+711I2   | <HB1I2        | S
+711     | <HB1$6        | With (KENTTA=710) Kenttanumero
+711     | <HB1          | + S
+HB1I1   | 880(new)I1    | S
+HB1I2   | 880(newest)I2 | S
+HB1     | 880(newest)   | S; Loppupiste
+
+730I1   | <H30I1        | S
+730I2   | <H30I2        | S
+730     | <H30$6        | With (KENTTA=880) Kenttanumero
+730$a   | <H30$a        | Table ('kyril2latinma21.tbl')
+730$m   | <H30$m        | Table ('kyril2latinma21.tbl')
+730$e   | <H30$e        | Table ('kyril2latinma21.tbl')
+730$r   | <H30$r        | Table ('kyril2latinma21.tbl')
+730$g   | <H30$g        | Table ('kyril2latinma21.tbl')
+730$n   | <H30$n        | Table ('kyril2latinma21.tbl')
+730$p   | <H30$p        | Table ('kyril2latinma21.tbl')
+730$s   | <H30$s        | Table ('kyril2latinma21.tbl')
+730$q   | <H30$q        | Table ('kyril2latinma21.tbl')
+730$o   | <H30$o        | Table ('kyril2latinma21.tbl')
+730$l   | <H30$l        | Table ('kyril2latinma21.tbl')
+H30I1   | 730(new)I1    | S
+H30I2   | 730(newest)I2 | S
+H30     | 730(newest)   | S; Loppupiste
+
+730I1   | <HD0I1          | S
+730I2   | <HD0I2          | S
+730     | <HD0$6          | With (KENTTA=730) Kenttanumero
+730     | <HD0            | + S
+HD0I1   | 880(new)I1      | S
+HD0I2   | 880(newest)I2   | S
+HD0     | 880(newest)     | S; Loppupiste
+
+740I1   | 740I1   | S
+740I2   | 740I2   | S
+740     | 740$6   | With (KENTTA=880) Kenttanumero
+740$a   | 740$a   | Table ('kyril2latinma21.tbl'); Loppupiste
+
+740I1   | <HE0I1          | S
+740I2   | <HE0I2          | S
+740     | <HE0$6          | With (KENTTA=740) Kenttanumero
+740     | <HE0            | + S
+HE0I1   | 880(new)I1      | S
+HE0I2   | 880(newest)I2   | S
+HE0     | 880(newest)     | S; Loppupiste
+
+760I1   | 760I1   | '0'
+760I2   | 760I2   | ' '
+760     | 760$6   | With (KENTTA=880) Kenttanumero
+760$t   | 760$t   | Table ('kyril2latinma21.tbl')
+760$c   | 760$c   | Table ('kyril2latinma21.tbl')
+760$x   | 760$x   | Table ('kyril2latinma21.tbl')
+
+760I1   | <HG0I1          | ' '
+760I2   | <HG0I2          | S
+760     | <HG0$6          | With (KENTTA=760) Kenttanumero
+760     | <HG0            | + S
+HG0I1   | 880(new)I1      | S
+HG0I2   | 880(newest)I2   | S
+HG0     | 880(newest)     | S
+
+762I1   | 762I1   | '0'
+762I2   | 762I2   | ' '
+762     | 762$6   | With (KENTTA=880) Kenttanumero
+762$t   | 762$t   | Table ('kyril2latinma21.tbl')
+762$c   | 762$c   | Table ('kyril2latinma21.tbl')
+762$x   | 762$x   | Table ('kyril2latinma21.tbl')
+
+762I1   | <HG2I1          | ' '
+762I2   | <HG2I2          | S
+762     | <HG2$6          | With (KENTTA=762) Kenttanumero
+762     | <HG2            | + S
+HG2I1   | 880(new)I1      | S
+HG2I2   | 880(newest)I2   | S
+HG2     | 880(newest)     | S
+
+765I1   | 765I1   | '0'
+765I2   | 765I2   | ' '
+765     | 765$6   | With (KENTTA=880) Kenttanumero
+765$t   | 765$t   | Table ('kyril2latinma21.tbl')
+765$c   | 765$c   | Table ('kyril2latinma21.tbl')
+765$x   | 765$x   | Table ('kyril2latinma21.tbl')
+
+765I1   | <HG6I1          | '0'
+765I2   | <HG6I2          | ' '
+765     | <HG6$6          | With (KENTTA=765) Kenttanumero
+765     | <HG6            | + S
+HG6I1   | 880(new)I1      | S
+HG6I2   | 880(newest)I2   | S
+HG6     | 880(newest)     | S
+
+767I1   | 767I1   | '0'
+767I2   | 767I2   | ' '
+767     | 767$6   | With (KENTTA=880) Kenttanumero
+767$t   | 767$t   | Table ('kyril2latinma21.tbl')
+767$c   | 767$c   | Table ('kyril2latinma21.tbl')
+767$x   | 767$x   | Table ('kyril2latinma21.tbl')
+
+767I1   | <HG7I1          | '0'
+767I2   | <HG7I2          | ' '
+767     | <HG7$6          | With (KENTTA=767) Kenttanumero
+767     | <HG7            | + S
+HG7I1   | 880(new)I1      | S
+HG7I2   | 880(newest)I2   | S
+HG7     | 880(newest)     | S
+
+770I1   | 770I1   | '0'
+770I2   | 770I2   | ' '
+770     | 770$6   | With (KENTTA=880) Kenttanumero
+770$t   | 770$t   | Table ('kyril2latinma21.tbl')
+770$c   | 770$c   | Table ('kyril2latinma21.tbl')
+770$x   | 770$x   | Table ('kyril2latinma21.tbl')
+
+770I1   | <HH0I1          | '0'
+770I2   | <HH0I2          | ' '
+770     | <HH0$6          | With (KENTTA=770) Kenttanumero
+770     | <HH0            | + S
+HH0I1   | 880(new)I1      | S
+HH0I2   | 880(newest)I2   | S
+HH0     | 880(newest)     | S
+
+772I1   | 772I1   | '0'
+772I2   | 772I2   | ' '
+772     | 772$6   | With (KENTTA=880) Kenttanumero
+772     | 772$t   | Table ('kyril2latinma21.tbl')
+772$c   | 772$c   | Table ('kyril2latinma21.tbl')
+772$x   | 772$x   | Table ('kyril2latinma21.tbl')
+
+772I1   | <HH2I1          | '0'
+772I2   | <HH2I2          | ' '
+772     | <HH2$6          | With (KENTTA=772) Kenttanumero
+772     | <HH2            | + S
+HH2I1   | 880(new)I1      | S
+HH2I2   | 880(newest)I2   | S
+HH2     | 880(newest)     | S
+
+773I1   | 773I1   | '0'
+773I2   | 773I2   | ' '
+773     | 773$6   | With (KENTTA=880) Kenttanumero
+773$7   | 773$7   | Table ('kyril2latinma21.tbl')
+773$w   | 773$w   | Table ('kyril2latinma21.tbl')
+773$a   | 773$a   | Table ('kyril2latinma21.tbl')
+773$t   | 773$t   | Table ('kyril2latinma21.tbl')
+773$h   | 773$h   | Table ('kyril2latinma21.tbl')
+773$b   | 773$b   | Table ('kyril2latinma21.tbl')
+773$d   | 773$d   | Table ('kyril2latinma21.tbl')
+773$m   | 773$m   | Table ('kyril2latinma21.tbl')
+773$k   | 773$k   | Table ('kyril2latinma21.tbl')
+773$u   | 773$u   | Table ('kyril2latinma21.tbl')
+773$x   | 773$x   | Table ('kyril2latinma21.tbl')
+773$z   | 773$z   | Table ('kyril2latinma21.tbl')
+773$o   | 773$o   | Table ('kyril2latinma21.tbl')
+773$g   | 773$g   | Table ('kyril2latinma21.tbl')
+773$q   | 773$q   | Table ('kyril2latinma21.tbl')
+
+773I1   | <HH3I1          | '0'
+773I2   | <HH3I2          | ' '
+773     | <HH3$6          | With (KENTTA=773) Kenttanumero
+773     | <HH3            | + S
+HH3I1   | 880(new)I1      | S
+HH3I2   | 880(newest)I2   | S
+HH3     | 880(newest)     | S
+
+776I1   | 776I1   | ' '
+776I2   | 776I2   | S
+776     | 776$6   | With (KENTTA=880) Kenttanumero
+776$t   | 776$t   | Table ('kyril2latinma21.tbl')
+776$c   | 776$c   | Table ('kyril2latinma21.tbl')
+776$x   | 776$x   | Table ('kyril2latinma21.tbl')
+
+776I1   | <HH6I1          | '0'
+776I2   | <HH6I2          | ' '
+776     | <HH6$6          | With (KENTTA=776) Kenttanumero
+776     | <HH6            | + S
+HH6I1   | 880(new)I1      | S
+HH6I2   | 880(newest)I2   | S
+HH6     | 880(newest)     | S
+
+780I1   | 780I1   | '0'
+780I2   | 780I2   | S
+780     | 780$6   | With (KENTTA=880) Kenttanumero
+780$t   | 780$t   | Table ('kyril2latinma21.tbl')
+780$c   | 780$c   | Table ('kyril2latinma21.tbl')
+780$x   | 780$x   | Table ('kyril2latinma21.tbl')
+
+780I1   | <HI0I1          | '0'
+780I2   | <HI0I2          | S
+780     | <HI0$6          | With (KENTTA=780) Kenttanumero
+780     | <HI0            | + S
+HI0I1   | 880(new)I1      | S
+HI0I2   | 880(newest)I2   | S
+HI0     | 880(newest)     | S
+
+785I1   | 785I1   | '0'
+785I2   | 785I2   | S
+785     | 785$6   | With (KENTTA=880) Kenttanumero
+785$t   | 785$t   | Table ('kyril2latinma21.tbl')
+785$c   | 785$c   | Table ('kyril2latinma21.tbl')
+785$x   | 785$x   | Table ('kyril2latinma21.tbl')
+
+785I1   | <HI5I1          | '0'
+785I2   | <HI5I2          | S
+785     | <HI5$6          | With (KENTTA=785) Kenttanumero
+785     | <HI5            | + S
+HI5I1   | 880(new)I1      | S
+HI5I2   | 880(newest)I2   | S
+HI5     | 880(newest)     | S
+
+787I1   | 787I1   | '0'
+787I2   | 787I2   | ' '
+787     | 787$6   | With (KENTTA=880) Kenttanumero
+787$t   | 787$t   | Table ('kyril2latinma21.tbl')
+787$c   | 787$c   | Table ('kyril2latinma21.tbl')
+787$x   | 787$x   | Table ('kyril2latinma21.tbl')
+
+787I1   | <HI7I1          | '0'
+787I2   | <HI7I2          | ' '
+787     | <HI7$6          | With (KENTTA=787) Kenttanumero
+787     | <HI7            | + S
+HI7I1   | 880(new)I1      | S
+HI7I2   | 880(newest)I2   | S
+HI7     | 880(newest)     | S
+
