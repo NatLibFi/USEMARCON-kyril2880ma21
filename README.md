@@ -8,7 +8,7 @@ Lisätietoja USEMARCON-ohjelmasta: http://www.nationallibrary.fi/libraries/forma
 
 KÄYTTÖ
 
-Kopioi konversiopaketti päätteellesi esimerkiksi "Download ZIP" -painikkeesta. Pura paketti haluamaasi sijaintiin esimerkiksi C:\Usemarcon\ -hakemiston alle. USEMARCONilla käytettävä varsinainen konversiotiedosto on ma2fi_iso69372.ini. 
+Kopioi konversiopaketti päätteellesi esimerkiksi "Download ZIP" -painikkeesta. Pura paketti haluamaasi sijaintiin esimerkiksi C:\Usemarcon\ -hakemiston alle. USEMARCONilla käytettävä varsinainen konversiotiedosto on kyril2880ma21.ini. 
 
 PALAUTE
 
@@ -18,4 +18,4 @@ marc-posti (at) helsinki.fi
 
 DESCRIPTION
 
-A USEMARCON rule for converting bibliographic records from MARC 21 to FINMARC (98) format. 
+A USEMARCON rule for Finnish libraries for translitteration of cyrillic MARC 21 records copied from external databases.
