@@ -2,7 +2,7 @@
 
 KUVAUS
 
-USEMARCON-ohjelmalla käytettävä konversiosääntö poimittujen kyrillisten bibliografisille tietueille. Konversio siirtää kyrilliikan tavallisista kentistä 880-kenttiin ja translitteroi tavallisiin kenttiin latinitsan. Konversio tuottaa tietueisiin ISBD-kuvailusääntöjen mukaiset kentät.
+USEMARCON-ohjelmalla käytettävä konversiosääntö poimituille kyrillisille bibliografisille tietueille. Konversio siirtää kyrilliikan tavallisista kentistä 880-kenttiin ja translitteroi tavallisiin kenttiin latinitsan. Konversio tuottaa tietueisiin ISBD-kuvailusääntöjen mukaiset kentät.
 
 Lisätietoja USEMARCON-ohjelmasta: http://www.nationallibrary.fi/libraries/format/usemarcon.html.
 
